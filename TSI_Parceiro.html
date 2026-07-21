@@ -279,12 +279,14 @@ section{padding:96px 48px}
 .etapa-card:hover::before{opacity:1}
 .etapa-left{display:flex;flex-direction:column;align-items:center;gap:10px}
 .etapa-num{
-  font-size:52px;font-weight:900;
-  background:linear-gradient(135deg,rgba(0,194,224,.25),rgba(0,194,224,.06));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;line-height:1;letter-spacing:-.05em;
+  font-size:110px;font-weight:900;
+  color:rgba(0,194,224,.08);
+  line-height:1;letter-spacing:-.04em;
   font-family:'Manrope',sans-serif;
+  user-select:none;
 }
+/* número em sessões claras (price-sec) */
+.price-sec .etapa-num{color:rgba(0,100,130,.12);}
 .etapa-icon{
   width:48px;height:48px;border-radius:12px;
   background:rgba(0,194,224,.08);border:1px solid rgba(0,194,224,.2);
@@ -544,7 +546,7 @@ section{padding:96px 48px}
   .closing{padding:72px 16px}
   .etapa-card{grid-template-columns:1fr;gap:16px}
   .etapa-left{flex-direction:row;align-items:center}
-  .etapa-num{font-size:36px}
+  .etapa-num{font-size:72px}
   .two-col,.two-mini,.three-col,.price-cards,.price-rules,.email-grid{grid-template-columns:1fr}
   .hero{padding:90px 16px 60px}
   .tl-wrap{gap:0}
