@@ -166,6 +166,19 @@ section{padding:96px 48px}
   flex:1;min-width:80px;display:flex;flex-direction:column;
   align-items:center;gap:14px;position:relative;z-index:1;
 }
+.tl-tooltip{
+  display:none;position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%);
+  background:var(--navy3);border:1px solid rgba(0,194,224,.25);border-radius:8px;
+  padding:10px 14px;width:220px;font-size:11.5px;color:#c8d4e0;line-height:1.6;
+  text-align:left;white-space:normal;z-index:100;pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.tl-tooltip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--navy3);
+}
+.tl-step:hover .tl-tooltip{display:block;}
+.tl-step:hover .tl-dot{background:var(--cyan);color:var(--navy);}
 .tl-dot{
   width:40px;height:40px;border-radius:50%;
   background:var(--navy2);
@@ -652,6 +665,16 @@ section{padding:96px 48px}
   </div>
 </section>
 
+<!-- ÁREA DE ATUAÇÃO -->
+<section style="padding:20px 0 0;">
+  <div class="container">
+    <div class="alert alert-w">
+      <span class="ai">⚠️</span>
+      <span><strong>Área de Atuação:</strong> A Servopa <strong>não atende</strong> clientes localizados nas regiões <strong>Norte, Nordeste e Rio de Janeiro</strong>. Verifique a localidade do cliente antes de iniciar o processo.</span>
+    </div>
+  </div>
+</section>
+
 <!-- TIMELINE OVERVIEW -->
 <section class="tl-sec">
   <div class="container">
@@ -659,12 +682,30 @@ section{padding:96px 48px}
     <h2 class="sec-h">6 etapas sequenciais</h2>
     <div class="tl-wrap">
       <div class="tl-line"></div>
-      <div class="tl-step"><div class="tl-dot active">1</div><div class="tl-lbl">Reserva e<br>Comissiona-<br>mento</div></div>
-      <div class="tl-step"><div class="tl-dot">2</div><div class="tl-lbl">Documenta-<br>ção</div></div>
-      <div class="tl-step"><div class="tl-dot">3</div><div class="tl-lbl">Biometria</div></div>
-      <div class="tl-step"><div class="tl-dot">4</div><div class="tl-lbl">Análise/<br>Avaliação</div></div>
-      <div class="tl-step"><div class="tl-dot">5</div><div class="tl-lbl">Aprovação/<br>Contrato</div></div>
-      <div class="tl-step"><div class="tl-dot">6</div><div class="tl-lbl">Termo de<br>Transferência</div></div>
+      <div class="tl-step" data-target="etapa01" data-tooltip="Pagamento da reserva (≈30%) · Reserva da carta · Documentação inicial · Comissionamento">
+        <div class="tl-dot active">1</div><div class="tl-lbl">Reserva e Comissionamento</div>
+        <div class="tl-tooltip"></div>
+      </div>
+      <div class="tl-step" data-target="etapa02" data-tooltip="Envio da documentação do cliente · Conferência cadastral · Envio para análise (PF/PJ)">
+        <div class="tl-dot">2</div><div class="tl-lbl">Documentação</div>
+        <div class="tl-tooltip"></div>
+      </div>
+      <div class="tl-step" data-target="etapa03" data-tooltip="Biometria facial · Confirmação de identidade · Homologação pela administradora">
+        <div class="tl-dot">3</div><div class="tl-lbl">Biometria</div>
+        <div class="tl-tooltip"></div>
+      </div>
+      <div class="tl-step" data-target="etapa04" data-tooltip="Análise da Administradora · Avaliação cadastral · Análise financeira · Aprovação da operação">
+        <div class="tl-dot">4</div><div class="tl-lbl">Análise / Avaliação</div>
+        <div class="tl-tooltip"></div>
+      </div>
+      <div class="tl-step" data-target="etapa05" data-tooltip="Contrato de Compra e Venda · Assinaturas · Pagamento do residual · Taxa de Transferência">
+        <div class="tl-dot">5</div><div class="tl-lbl">Aprovação / Contrato</div>
+        <div class="tl-tooltip"></div>
+      </div>
+      <div class="tl-step" data-target="etapa06" data-tooltip="Formalização da transferência · Alteração de titularidade · Crédito disponível">
+        <div class="tl-dot">6</div><div class="tl-lbl">Termo de Transferência</div>
+        <div class="tl-tooltip"></div>
+      </div>
     </div>
     <div class="tl-note">ℹ️ &nbsp;O processo é <strong>sequencial</strong> — cada etapa depende da conclusão da anterior. Processos acima de <strong>30 dias</strong> sofrem acréscimo de juros.</div>
   </div>
@@ -717,7 +758,7 @@ section{padding:96px 48px}
 <div class="divider"></div>
 
 <!-- ETAPA 01 -->
-<section>
+<section id="etapa01">
   <div class="container">
     <div class="sec-label">Etapa 01</div>
     <h2 class="sec-h">Reserva e Comissionamento</h2>
@@ -782,6 +823,10 @@ section{padding:96px 48px}
             </div>
           </div>
 
+          <div class="alert alert-i" style="margin-top:14px;">
+            <span class="ai">ℹ️</span>
+            <span><strong>Não aprovação pela administradora:</strong> caso a operação não seja aprovada pela administradora Servopa, <strong>o valor pago na reserva é devolvido integralmente</strong> ao cliente. Essa situação é distinta da desistência voluntária, que incide a taxa de 5%.</span>
+          </div>
           <div class="alert alert-w">
             <span class="ai">⚠️</span>
             <span><strong>Prazo:</strong> processos com mais de 30 dias de atraso por falta de retorno do cliente poderão incidir juros de <strong>1,5% ao mês</strong> sobre o saldo em aberto.</span>
@@ -793,7 +838,7 @@ section{padding:96px 48px}
 </section>
 
 <!-- ETAPA 02 — DOCUMENTAÇÃO -->
-<section class="doc-sec">
+<section id="etapa02" class="doc-sec">
   <div class="container">
     <div class="sec-label">Etapa 02</div>
     <h2 class="sec-h">Documentação por Perfil</h2>
@@ -803,7 +848,7 @@ section{padding:96px 48px}
       <span class="ai">ℹ️</span>
       <div>
         <strong>Documentação:</strong> Para autônomos e clientes sem vínculo formal, é obrigatória a apresentação do <strong>IRPF (Declaração + Recibo)</strong>. A documentação deve seguir integralmente o checklist da administradora.<br><br>
-        <strong>Prazo para envio:</strong> A documentação deve ser enviada em até <strong>4 horas</strong>. Após esse prazo, o parceiro está ciente de que a <strong>reserva poderá ser cancelada</strong> e a carta de crédito retornará para comercialização.
+        <strong>Prazo para envio:</strong> A documentação deve ser enviada em até <strong>48 horas</strong>. Após esse prazo, o parceiro está ciente de que a <strong>reserva poderá ser cancelada</strong> e a carta de crédito retornará para comercialização.
       </div>
     </div>
 
@@ -864,7 +909,7 @@ section{padding:96px 48px}
 </section>
 
 <!-- ETAPA 03 -->
-<section>
+<section id="etapa03">
   <div class="container">
     <div class="sec-label">Etapa 03</div>
     <h2 class="sec-h">Biometria</h2>
@@ -881,7 +926,7 @@ section{padding:96px 48px}
           <div class="pill-grid">
             <div class="pill"><strong>Passo 1</strong> — Receber e abrir o e-mail oficial da Servopa</div>
             <div class="pill"><strong>Passo 2</strong> — Inserir foto nítida do RG ou CNH</div>
-            <div class="pill"><strong>Passo 3</strong> — Tirar selfie segurando o documento</div>
+            <div class="pill"><strong>Passo 3</strong> — Tirar selfie (facial)</div>
             <div class="pill"><strong>Passo 4</strong> — Clicar em Finalizar</div>
           </div>
           <div class="alert alert-w">
@@ -895,7 +940,7 @@ section{padding:96px 48px}
 </section>
 
 <!-- ETAPA 04 — ANÁLISE -->
-<section class="price-sec">
+<section id="etapa04" class="price-sec">
   <div class="container">
     <div class="sec-label">Etapa 04</div>
     <h2 class="sec-h" style="color:var(--navy)">Análise e Avaliação do Bem</h2>
@@ -934,6 +979,10 @@ section{padding:96px 48px}
       <div class="pr"><div class="prl">Regra Geral</div><div class="prt">O valor do bem deve ser <strong>maior que o saldo devedor</strong>.</div></div>
       <div class="pr"><div class="prl">Regra para Reforma</div><div class="prt">O valor do bem deve ser <strong>2× o saldo devedor</strong> para liberar 100% do crédito.</div></div>
     </div>
+    <div class="alert alert-i" style="margin-bottom:16px;">
+      <span class="ai">ℹ️</span>
+      <span>Todas as avaliações são realizadas por <strong>avaliador homologado pela Servopa</strong>. Não é permitido indicar ou substituir o avaliador.</span>
+    </div>
     <div class="price-warn">
       <span style="font-size:16px;flex-shrink:0;">⚠️</span>
       <span>Valores pagos por avaliação <strong>não são reembolsáveis</strong>, mesmo em caso de negativa ou reprovação do bem.</span>
@@ -944,7 +993,7 @@ section{padding:96px 48px}
 <div class="divider"></div>
 
 <!-- ETAPA 05 -->
-<section>
+<section id="etapa05">
   <div class="container">
     <div class="sec-label">Etapa 05</div>
     <h2 class="sec-h">Aprovação e Contrato</h2>
@@ -991,7 +1040,7 @@ section{padding:96px 48px}
 </section>
 
 <!-- ETAPA 06 -->
-<section style="background:var(--navy2)">
+<section id="etapa06" style="background:var(--navy2)">
   <div class="container">
     <div class="sec-label">Etapa 06</div>
     <h2 class="sec-h">Termo de Transferência e Seguro</h2>
@@ -1033,6 +1082,10 @@ section{padding:96px 48px}
                 <div class="db-icon">🏆</div>
                 <div class="db-t">Processo Concluído</div>
                 <div class="db-s">Transferência efetivada pela administradora</div>
+              </div>
+              <div class="alert alert-i" style="margin-top:16px;">
+                <span class="ai">ℹ️</span>
+                <span><strong>Pós-transferência:</strong> O <strong>faturamento do bem</strong> (emissão da nota fiscal pelo vendedor) é uma etapa separada, realizada após a conclusão da transferência da cota. O parceiro deve orientar o cliente sobre esse fluxo complementar.</span>
               </div>
             </div>
           </div>
@@ -1115,6 +1168,19 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ---- TIMELINE TOOLTIPS & CLICK-TO-SCROLL ----
+document.querySelectorAll('.tl-step').forEach(step => {
+  const dot = step.querySelector('.tl-dot');
+  const tip = step.querySelector('.tl-tooltip');
+  if (tip) tip.textContent = step.dataset.tooltip || '';
+
+  step.style.cursor = 'pointer';
+  step.addEventListener('click', () => {
+    const target = document.getElementById(step.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
 
 // ---- TIMELINE DOT HIGHLIGHT on scroll ----
 const sections = document.querySelectorAll('section');
