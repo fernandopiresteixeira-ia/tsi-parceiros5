@@ -166,23 +166,75 @@ section{padding:96px 48px}
   flex:1;min-width:80px;display:flex;flex-direction:column;
   align-items:center;gap:14px;position:relative;z-index:1;
 }
-.tl-tooltip{
-  display:none;position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);
-  background:var(--navy3);border:1px solid rgba(0,194,224,.25);border-radius:8px;
-  padding:10px 14px;width:220px;font-size:11.5px;color:#c8d4e0;line-height:1.6;
-  text-align:left;white-space:normal;z-index:100;pointer-events:none;
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
+/* ---- ETAPA MODAL ---- */
+.etapa-overlay{
+  display:none;position:fixed;inset:0;background:rgba(4,10,22,.75);
+  backdrop-filter:blur(6px);z-index:9000;
+  align-items:center;justify-content:center;
 }
-.tl-tooltip::before{
-  content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
-  border:6px solid transparent;border-bottom-color:var(--navy3);
+.etapa-overlay.open{display:flex;}
+.etapa-modal{
+  background:linear-gradient(145deg,#0d2040 0%,#07172e 100%);
+  border:1px solid rgba(0,194,224,.3);border-radius:20px;
+  padding:40px 44px;width:min(520px,90vw);position:relative;
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(0,194,224,.08);
+  animation:modalIn .22s cubic-bezier(.34,1.56,.64,1);
 }
-.tl-step:hover .tl-tooltip{display:block;}
+@keyframes modalIn{
+  from{opacity:0;transform:scale(.88) translateY(20px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.modal-close{
+  position:absolute;top:16px;right:18px;
+  background:rgba(255,255,255,.06);border:none;color:#7a94b0;
+  width:32px;height:32px;border-radius:50%;font-size:18px;line-height:1;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s;
+}
+.modal-close:hover{background:rgba(0,194,224,.15);color:var(--cyan);}
+.modal-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,194,224,.1);border:1px solid rgba(0,194,224,.25);
+  border-radius:30px;padding:4px 14px;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cyan);font-family:'Manrope',sans-serif;margin-bottom:18px;
+}
+.modal-num{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--cyan);color:var(--navy);
+  font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  font-family:'Manrope',sans-serif;
+}
+.modal-title{
+  font-size:24px;font-weight:800;color:#fff;letter-spacing:-.02em;
+  font-family:'Manrope',sans-serif;margin-bottom:8px;line-height:1.2;
+}
+.modal-hl{
+  font-size:13.5px;font-weight:700;color:var(--cyan);
+  display:flex;align-items:center;gap:8px;margin-bottom:20px;
+  padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.modal-hl::before{content:"📌";font-size:14px;}
+.modal-items{display:flex;flex-direction:column;gap:10px;}
+.modal-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;padding:12px 16px;
+  font-size:13.5px;color:#c8d4e0;line-height:1.5;
+}
+.modal-item::before{
+  content:"✦";color:var(--cyan);font-size:10px;margin-top:3px;flex-shrink:0;
+}
+.modal-cta{
+  margin-top:24px;width:100%;padding:13px;border-radius:12px;
+  background:linear-gradient(135deg,var(--cyan),#0099b8);
+  border:none;color:var(--navy);font-weight:800;font-size:14px;
+  font-family:'Manrope',sans-serif;cursor:pointer;letter-spacing:.02em;
+  transition:opacity .2s;
+}
+.modal-cta:hover{opacity:.88;}
+.tl-step{cursor:pointer;}
 .tl-step:hover .tl-dot{background:var(--cyan);color:var(--navy);}
-.tl-tooltip .tip-hl{font-weight:700;color:var(--cyan);margin-bottom:8px;font-size:12px;}
-.tl-tooltip ul{margin:0;padding:0;list-style:none;}
-.tl-tooltip ul li{padding:3px 0;color:#c8d4e0;font-size:11.5px;}
-.tl-tooltip ul li::before{content:"• ";color:var(--cyan);font-weight:700;}
 .tl-dot{
   width:40px;height:40px;border-radius:50%;
   background:var(--navy2);
@@ -637,6 +689,18 @@ section{padding:96px 48px}
 </style>
 </head>
 <body>
+
+<!-- ETAPA MODAL -->
+<div class="etapa-overlay" id="etapaOverlay">
+  <div class="etapa-modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-badge"><div class="modal-num" id="modalNum">1</div><span id="modalLabel">Etapa</span></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-hl" id="modalHl"></div>
+    <div class="modal-items" id="modalItems"></div>
+    <button class="modal-cta" id="modalCta">Ver detalhes desta etapa →</button>
+  </div>
+</div>
 
 <!-- HEADER -->
 <header class="header">
@@ -1173,21 +1237,41 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ---- TIMELINE TOOLTIPS & CLICK-TO-SCROLL ----
-document.querySelectorAll('.tl-step').forEach(step => {
-  const tip = step.querySelector('.tl-tooltip');
+// ---- TIMELINE MODAL ----
+const ETAPA_LABELS = ['Reserva e Comissionamento','Documentação','Biometria','Análise / Avaliação','Aprovação / Contrato','Termo de Transferência'];
+const overlay = document.getElementById('etapaOverlay');
+const modalClose = document.getElementById('modalClose');
+const modalCta = document.getElementById('modalCta');
+let ctaTarget = null;
+
+function openModal(step, num) {
   const hl = step.dataset.tipHl || '';
   const items = (step.dataset.tipItems || '').split('|').filter(Boolean);
-  if (tip && (hl || items.length)) {
-    tip.innerHTML =
-      (hl ? `<div class="tip-hl">${hl}</div>` : '') +
-      (items.length ? '<ul>' + items.map(i => `<li>${i}</li>`).join('') + '</ul>' : '');
-  }
-  step.style.cursor = 'pointer';
-  step.addEventListener('click', () => {
-    const target = document.getElementById(step.dataset.target);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  document.getElementById('modalNum').textContent = num;
+  document.getElementById('modalLabel').textContent = 'Etapa 0' + num;
+  document.getElementById('modalTitle').textContent = ETAPA_LABELS[num - 1] || '';
+  document.getElementById('modalHl').textContent = hl;
+  document.getElementById('modalItems').innerHTML = items.map(i => `<div class="modal-item">${i}</div>`).join('');
+  ctaTarget = document.getElementById(step.dataset.target);
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.tl-step').forEach((step, i) => {
+  step.addEventListener('click', () => openModal(step, i + 1));
+});
+
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+modalCta.addEventListener('click', () => {
+  closeModal();
+  if (ctaTarget) setTimeout(() => ctaTarget.scrollIntoView({ behavior: 'smooth', block: 'start' }), 180);
 });
 
 // ---- TIMELINE DOT HIGHLIGHT on scroll ----
