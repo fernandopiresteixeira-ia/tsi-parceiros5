@@ -179,6 +179,10 @@ section{padding:96px 48px}
 }
 .tl-step:hover .tl-tooltip{display:block;}
 .tl-step:hover .tl-dot{background:var(--cyan);color:var(--navy);}
+.tl-tooltip .tip-hl{font-weight:700;color:var(--cyan);margin-bottom:8px;font-size:12px;}
+.tl-tooltip ul{margin:0;padding:0;list-style:none;}
+.tl-tooltip ul li{padding:3px 0;color:#c8d4e0;font-size:11.5px;}
+.tl-tooltip ul li::before{content:"• ";color:var(--cyan);font-weight:700;}
 .tl-dot{
   width:40px;height:40px;border-radius:50%;
   background:var(--navy2);
@@ -682,27 +686,27 @@ section{padding:96px 48px}
     <h2 class="sec-h">6 etapas sequenciais</h2>
     <div class="tl-wrap">
       <div class="tl-line"></div>
-      <div class="tl-step" data-target="etapa01" data-tooltip="Pagamento da reserva (≈30%) · Reserva da carta · Documentação inicial · Comissionamento">
+      <div class="tl-step" data-target="etapa01" data-tip-hl="Pagamento da reserva (≈30%)" data-tip-items="Reserva da carta|Documentação inicial|Início da operação">
         <div class="tl-dot active">1</div><div class="tl-lbl">Reserva e Comissionamento</div>
         <div class="tl-tooltip"></div>
       </div>
-      <div class="tl-step" data-target="etapa02" data-tooltip="Envio da documentação do cliente · Conferência cadastral · Envio para análise (PF/PJ)">
+      <div class="tl-step" data-target="etapa02" data-tip-hl="Recebimento da Documentação" data-tip-items="Documentação PF/PJ|Conferência cadastral|Envio para análise">
         <div class="tl-dot">2</div><div class="tl-lbl">Documentação</div>
         <div class="tl-tooltip"></div>
       </div>
-      <div class="tl-step" data-target="etapa03" data-tooltip="Biometria facial · Confirmação de identidade · Homologação pela administradora">
+      <div class="tl-step" data-target="etapa03" data-tip-hl="Biometria facial" data-tip-items="Confirmação de identidade|Homologação da administradora">
         <div class="tl-dot">3</div><div class="tl-lbl">Biometria</div>
         <div class="tl-tooltip"></div>
       </div>
-      <div class="tl-step" data-target="etapa04" data-tooltip="Análise da Administradora · Avaliação cadastral · Análise financeira · Aprovação da operação">
+      <div class="tl-step" data-target="etapa04" data-tip-hl="Análise da Administradora" data-tip-items="Avaliação cadastral|Análise financeira|Aprovação da operação">
         <div class="tl-dot">4</div><div class="tl-lbl">Análise / Avaliação</div>
         <div class="tl-tooltip"></div>
       </div>
-      <div class="tl-step" data-target="etapa05" data-tooltip="Contrato de Compra e Venda · Assinaturas · Pagamento do residual · Taxa de Transferência">
+      <div class="tl-step" data-target="etapa05" data-tip-hl="Formalização" data-tip-items="Contrato de Compra e Venda|Assinaturas|Formalização da operação">
         <div class="tl-dot">5</div><div class="tl-lbl">Aprovação / Contrato</div>
         <div class="tl-tooltip"></div>
       </div>
-      <div class="tl-step" data-target="etapa06" data-tooltip="Formalização da transferência · Alteração de titularidade · Crédito disponível">
+      <div class="tl-step" data-target="etapa06" data-tip-hl="Transferência da Carta" data-tip-items="Formalização da transferência|Alteração da titularidade|Crédito disponível">
         <div class="tl-dot">6</div><div class="tl-lbl">Termo de Transferência</div>
         <div class="tl-tooltip"></div>
       </div>
@@ -1171,10 +1175,14 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // ---- TIMELINE TOOLTIPS & CLICK-TO-SCROLL ----
 document.querySelectorAll('.tl-step').forEach(step => {
-  const dot = step.querySelector('.tl-dot');
   const tip = step.querySelector('.tl-tooltip');
-  if (tip) tip.textContent = step.dataset.tooltip || '';
-
+  const hl = step.dataset.tipHl || '';
+  const items = (step.dataset.tipItems || '').split('|').filter(Boolean);
+  if (tip && (hl || items.length)) {
+    tip.innerHTML =
+      (hl ? `<div class="tip-hl">${hl}</div>` : '') +
+      (items.length ? '<ul>' + items.map(i => `<li>${i}</li>`).join('') + '</ul>' : '');
+  }
   step.style.cursor = 'pointer';
   step.addEventListener('click', () => {
     const target = document.getElementById(step.dataset.target);
