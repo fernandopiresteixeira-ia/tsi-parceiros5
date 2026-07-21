@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TSI Soluções — Processo de Aquisição (Cliente)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#07172E;--navy2:#0D2040;--navy3:#152B52;
+  --cyan:#00C2E0;--cyan2:#00A8C4;--gold:#C9A84C;
+  --white:#FFFFFF;--off:#F2F6FC;--muted:#7A90B0;--body:#1C2E4A;--red:#D72638;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+.header{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,23,46,.92);border-bottom:1px solid rgba(0,194,224,.12);backdrop-filter:blur(16px)}
+.logo-wrap img{height:36px;width:auto;max-width:180px;object-fit:contain;display:block}
+.badge-mode{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:20px;border:1px solid rgba(0,194,224,.3);color:var(--cyan);background:rgba(0,194,224,.07)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 48px 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(0,194,224,.08) 0%,transparent 70%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,194,224,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,224,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at center,black 20%,transparent 80%)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);background:rgba(0,194,224,.08);border:1px solid rgba(0,194,224,.25);border-radius:20px;padding:7px 16px;margin-bottom:32px}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);display:inline-block}
+.hero-title{font-size:clamp(34px,5vw,68px);font-weight:900;line-height:1.06;letter-spacing:-.03em;text-wrap:balance;max-width:800px;margin-bottom:20px}
+.hero-title em{font-style:normal;color:var(--cyan)}
+.hero-sub{font-size:clamp(14px,1.6vw,18px);color:var(--muted);max-width:500px;line-height:1.65;margin-bottom:44px}
+.hero-stats{display:flex;gap:44px;justify-content:center;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;align-items:center;gap:4px}
+.stat-v{font-size:clamp(24px,2.8vw,36px);font-weight:900;color:var(--white);line-height:1}
+.stat-v span{color:var(--cyan)}
+.stat-l{font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat-div{width:1px;height:36px;background:rgba(255,255,255,.1)}
+.scroll-hint{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:52px;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.scroll-arrow{width:20px;height:30px;border:2px solid rgba(0,194,224,.4);border-radius:10px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
+.scroll-arrow::after{content:'';width:4px;height:8px;background:var(--cyan);border-radius:2px;animation:sd 1.5s infinite}
+@keyframes sd{0%,100%{transform:translateY(0);opacity:1}80%{transform:translateY(8px);opacity:.2}}
+section{padding:88px 48px}
+.container{max-width:1100px;margin:0 auto}
+.sec-tag{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.sec-h{font-size:clamp(24px,3.2vw,40px);font-weight:900;letter-spacing:-.02em;line-height:1.1;text-wrap:balance;margin-bottom:14px}
+.sec-d{font-size:14.5px;color:var(--muted);line-height:1.7;max-width:540px;margin-bottom:44px}
+.tl-sec{background:var(--navy2)}
+.tl-row{display:flex;gap:0;position:relative;margin-bottom:32px}
+.tl-bar{position:absolute;top:20px;left:20px;right:20px;height:2px;background:linear-gradient(90deg,var(--cyan),rgba(0,194,224,.2));z-index:0}
+.tl-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;z-index:1}
+.tl-dot{width:40px;height:40px;border-radius:50%;background:var(--navy2);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--cyan)}
+.tl-lbl{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:center;line-height:1.3}
+.tl-note{background:rgba(0,194,224,.07);border:1px solid rgba(0,194,224,.2);border-radius:12px;padding:15px 20px;font-size:13.5px;color:rgba(255,255,255,.75);line-height:1.6}
+.etapa{display:grid;grid-template-columns:72px 1fr;gap:28px;padding:36px;background:var(--navy3);border:1px solid rgba(255,255,255,.06);border-radius:20px;margin-bottom:18px}
+.etapa:hover{border-color:rgba(0,194,224,.25)}
+.etapa-n{font-size:48px;font-weight:900;color:rgba(0,194,224,.12);line-height:1;letter-spacing:-.04em;margin-top:-4px}
+.etapa-tag{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
+.etapa-h{font-size:19px;font-weight:800;color:var(--white);margin-bottom:12px}
+.etapa-body{font-size:13.5px;color:var(--muted);line-height:1.65}
+.etapa-body strong{color:var(--white)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.two-mini{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mini-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:16px 18px;font-size:13px;color:rgba(255,255,255,.75);line-height:1.55}
+.mini-card strong{color:var(--white)}
+.mini-h{font-size:13px;font-weight:700;color:var(--white);margin-bottom:8px}
+.col-card{background:var(--navy3);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px}
+.col-card .ch{font-size:13.5px;font-weight:700;color:var(--white);margin-bottom:10px}
+.col-card ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.col-card ul li{font-size:13px;line-height:1.5;color:rgba(255,255,255,.75);padding-left:14px;position:relative}
+.col-card ul li::before{content:'›';position:absolute;left:0;color:var(--cyan);font-weight:700}
+.col-card ul li strong{color:var(--white)}
+.pill-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 13px;font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.4}
+.bank-box{background:var(--navy3);border:1px solid rgba(0,194,224,.2);border-radius:12px;padding:20px;display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:13.5px;line-height:1.85;margin-top:14px}
+.bk-l{color:var(--muted)}
+.bk-v{font-weight:700;color:var(--white)}
+.alert{border-radius:10px;padding:14px 18px;font-size:13px;line-height:1.55;display:flex;gap:10px;align-items:flex-start;margin-top:16px}
+.ai{flex-shrink:0;font-size:15px;margin-top:1px}
+.alert-i{background:rgba(0,194,224,.08);border:1px solid rgba(0,194,224,.25);color:rgba(255,255,255,.82)}
+.alert-w{background:rgba(215,38,56,.08);border:1px solid rgba(215,38,56,.25);color:rgba(255,255,255,.82)}
+.alert-g{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.25);color:rgba(255,255,255,.82)}
+.tab-sec{background:var(--navy2)}
+.tab-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+.tab-btn{background:var(--navy3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 16px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab-btn:hover{color:var(--white);border-color:rgba(0,194,224,.3)}
+.tab-btn.active{background:var(--cyan);border-color:var(--cyan);color:var(--navy);font-weight:700}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.doc-item{background:var(--navy3);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.8);display:flex;gap:9px;align-items:flex-start}
+.doc-item .di{flex-shrink:0;font-size:15px}
+.doc-note{margin-top:14px;background:rgba(215,38,56,.07);border:1px solid rgba(215,38,56,.22);border-radius:9px;padding:13px 16px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.55}
+.civil-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.civil-c{background:var(--navy3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px}
+.civil-c .ci{font-size:24px;margin-bottom:10px}
+.civil-c .ch{font-size:13.5px;font-weight:700;color:var(--white);margin-bottom:7px}
+.civil-c p{font-size:13px;color:var(--muted);line-height:1.55}
+.civil-c strong{color:var(--white)}
+.price-sec{background:var(--off);color:var(--body)}
+.price-sec .sec-tag{color:var(--cyan2)}
+.price-sec .sec-h{color:var(--navy)}
+.price-sec .sec-d{color:var(--muted)}
+.price-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pc{background:var(--white);border:1px solid #D6E2F0;border-radius:14px;padding:24px;text-align:center}
+.pc .pci{font-size:26px;margin-bottom:10px}
+.pc .pcn{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.pc .pcv{font-size:30px;font-weight:900;color:var(--navy);line-height:1}
+.pc .pcx{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.35}
+.pc.feat{background:var(--navy);border-color:var(--cyan)}
+.pc.feat .pcn{color:var(--cyan)}
+.pc.feat .pcv{color:var(--white)}
+.pc.feat .pcx{color:rgba(255,255,255,.45)}
+.price-rules{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.pr{background:var(--white);border:1px solid #D6E2F0;border-radius:10px;padding:18px}
+.pr .prl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.pr .prt{font-size:13.5px;color:var(--navy);line-height:1.5}
+.price-warn{background:rgba(215,38,56,.06);border:1px solid rgba(215,38,56,.2);border-radius:9px;padding:13px 17px;font-size:13px;color:var(--body);margin-top:14px;line-height:1.5}
+.checks{display:flex;flex-direction:column;gap:10px}
+.chk-row{display:flex;align-items:center;gap:14px;background:var(--navy3);border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:16px 20px}
+.chkm{width:26px;height:26px;border-radius:50%;background:rgba(0,194,224,.1);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:900;color:var(--cyan)}
+.chkt{font-size:14px;color:var(--white);line-height:1.35}
+.chkt small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.done-badge{background:rgba(0,194,224,.1);border:1px solid rgba(0,194,224,.28);border-radius:12px;padding:22px 28px;text-align:center;margin-top:20px}
+.done-badge p:first-child{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
+.done-badge p:last-child{font-size:13.5px;color:rgba(255,255,255,.5)}
+.email-sec{background:var(--navy2)}
+.email-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.email-card{border-radius:14px;padding:24px}
+.email-card.blue{background:rgba(0,140,255,.07);border:1px solid rgba(0,140,255,.25)}
+.email-card.green{background:rgba(0,200,130,.07);border:1px solid rgba(0,200,130,.25)}
+.email-card .ech{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.email-card.blue .ech{color:#5BB8FF}
+.email-card.green .ech{color:#4CD9A0}
+.email-card ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.email-card ul li{font-size:13px;color:rgba(255,255,255,.75);line-height:1.5;padding-left:14px;position:relative}
+.email-card ul li::before{content:'•';position:absolute;left:0;color:rgba(255,255,255,.3)}
+.email-card ul li strong{color:var(--white)}
+.closing{background:var(--navy);text-align:center;padding:110px 48px}
+.closing-h{font-size:clamp(26px,3.8vw,48px);font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:14px}
+.closing-sub{font-size:15px;color:var(--muted);max-width:460px;margin:0 auto 44px;line-height:1.65}
+.pillars{display:flex;gap:36px;justify-content:center;margin-bottom:48px;flex-wrap:wrap}
+.pillar{display:flex;flex-direction:column;align-items:center;gap:10px}
+.pillar-i{width:56px;height:56px;border-radius:14px;background:rgba(0,194,224,.1);border:1px solid rgba(0,194,224,.25);display:flex;align-items:center;justify-content:center;font-size:22px}
+.pillar-n{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+.contacts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cpill{background:rgba(0,194,224,.08);border:1px solid rgba(0,194,224,.25);border-radius:9px;padding:11px 20px;font-size:13px;font-weight:600;color:var(--cyan)}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,194,224,.15),transparent);margin:0 48px}
+@media(max-width:700px){
+  .header{padding:0 20px}
+  section{padding:64px 20px}
+  .etapa{grid-template-columns:1fr}
+  .two-col,.two-mini,.civil-grid,.price-cards,.price-rules,.email-grid{grid-template-columns:1fr}
+  .hero{padding:90px 20px 64px}
+  .closing{padding:72px 20px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo-wrap">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWsAAABaCAYAAAB+F3fEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAALiMAAC4jAXilP3YAAANtaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+PHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyI+PGRjOmNyZWF0b3I+PHJkZjpTZXEgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOmxpPlBlZHJvb294eCAzMDQ8L3JkZjpsaT48L3JkZjpTZXE+DQoJCQk8L2RjOmNyZWF0b3I+PC9yZGY6RGVzY3JpcHRpb24+PHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9InV1aWQ6ZmFmNWJkZDUtYmEzZC0xMWRhLWFkMzEtZDMzZDc1MTgyZjFiIiB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+PGV4aWY6RGF0ZVRpbWVPcmlnaW5hbD4yMDI1LTAxLTIxVDEzOjU0OjExLjMyMjwvZXhpZjpEYXRlVGltZU9yaWdpbmFsPjwvcmRmOkRlc2NyaXB0aW9uPjxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSJ1dWlkOmZhZjViZGQ1LWJhM2QtMTFkYS1hZDMxLWQzM2Q3NTE4MmYxYiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIj48eG1wOkNyZWF0ZURhdGU+MjAyNS0wMS0yMVQxMzo1NDoxMS4zMjI8L3htcDpDcmVh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" alt="TSI Soluções">
+  </div>
+  <div class="badge-mode">Para o Cliente Final</div>
+</header>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">Para o Cliente Final · Cartas Contempladas Servopa</div>
+  <h1 class="hero-title">Processo de Aquisição de <em>Cota Contemplada</em></h1>
+  <p class="hero-sub">Crédito imediato, sem sorteio, sem juros de financiamento. Conheça cada etapa do fluxo operacional.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-v">6</div><div class="stat-l">Etapas</div></div>
+    <div class="stat-div"></div>
+    <div class="stat"><div class="stat-v">0<span>%</span></div><div class="stat-l">Juros</div></div>
+    <div class="stat-div"></div>
+    <div class="stat"><div class="stat-v">100<span>%</span></div><div class="stat-l">Digital</div></div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-arrow"></div>Role para ver o processo</div>
+</section>
+
+<section class="tl-sec">
+  <div class="container">
+    <div class="sec-tag">Visão Geral do Processo</div>
+    <h2 class="sec-h">6 etapas sequenciais</h2>
+    <div class="tl-row">
+      <div class="tl-bar"></div>
+      <div class="tl-step"><div class="tl-dot">1</div><div class="tl-lbl">Reserva</div></div>
+      <div class="tl-step"><div class="tl-dot">2</div><div class="tl-lbl">Documentação</div></div>
+      <div class="tl-step"><div class="tl-dot">3</div><div class="tl-lbl">Biometria</div></div>
+      <div class="tl-step"><div class="tl-dot">4</div><div class="tl-lbl">Análise/<br>Avaliação</div></div>
+      <div class="tl-step"><div class="tl-dot">5</div><div class="tl-lbl">Aprovação/<br>Contrato</div></div>
+      <div class="tl-step"><div class="tl-dot">6</div><div class="tl-lbl">Termo de<br>Transferência</div></div>
+    </div>
+    <div class="tl-note">ℹ️ &nbsp;O processo é <strong>sequencial</strong> — cada etapa depende da conclusão da anterior.</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="email-sec">
+  <div class="container">
+    <div class="sec-tag">Comunicação</div>
+    <h2 class="sec-h">E-mails que o cliente receberá</h2>
+    <div class="email-grid">
+      <div class="email-card blue">
+        <div class="ech">✉️ Trâmite TSI Soluções</div>
+        <ul>
+          <li><strong>Sinal de Negócio</strong> — enviado no início do processo para assinatura eletrônica</li>
+          <li><strong>Contrato de Compra e Venda</strong> — enviado após aprovação da análise para assinatura eletrônica</li>
+        </ul>
+      </div>
+      <div class="email-card green">
+        <div class="ech">✉️ Trâmite Servopa</div>
+        <ul>
+          <li>E-mail de <strong>Validação Biométrica</strong></li>
+          <li>E-mail de <strong>Documentação Complementar</strong> — quando necessário</li>
+          <li>E-mail para <strong>Preenchimento dos Dados do Bem</strong></li>
+          <li>Link para <strong>Pagamento da Avaliação</strong></li>
+          <li>Aviso de <strong>Agendamento e Data da Avaliação</strong> (imóveis)</li>
+          <li>E-mail de <strong>Aprovação</strong></li>
+          <li>Link para <strong>Pagamento da Taxa de Transferência</strong></li>
+          <li>E-mail de <strong>Termo de Seguro</strong> — para assinatura eletrônica</li>
+          <li>E-mail de <strong>Termo de Transferência</strong> — para assinatura eletrônica</li>
+          <li>E-mail de <strong>Conclusão e Transferência</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert alert-w" style="margin-top:20px;">
+      <span class="ai">🔒</span>
+      <span><strong>IMPORTANTE:</strong> O cliente deve acompanhar a caixa de entrada (incluindo spam) e realizar assinaturas, pagamentos e envios dentro do prazo informado em cada e-mail.</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="container">
+    <div class="sec-tag">Etapas 01 a 03</div>
+    <h2 class="sec-h">Reserva, Documentação e Biometria</h2>
+
+    <div class="etapa">
+      <div class="etapa-n">01</div>
+      <div>
+        <div class="etapa-tag">Reserva</div>
+        <div class="etapa-h">Reserva</div>
+        <div class="etapa-body">
+          <div class="two-col">
+            <div class="col-card">
+              <div class="ch">💳 Procedimento Inicial</div>
+              <ul>
+                <li>Pagamento de <strong>30% do valor da entrada</strong></li>
+                <li><strong>Documento de Comprovação de Reserva</strong> enviado para assinatura obrigatória após o pagamento</li>
+              </ul>
+            </div>
+            <div class="col-card">
+              <div class="ch">📋 Dados obrigatórios para reserva</div>
+              <ul>
+                <li>Comprovante de pagamento (30%)</li>
+                <li>Documento de Identificação (RG/CNH)</li>
+                <li>Comprovante de Residência atualizado</li>
+                <li>E-mail válido do cliente</li>
+              </ul>
+            </div>
+          </div>
+          <div style="margin-top:16px;">
+            <p style="font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Dados bancários — TSI Soluções</p>
+            <div class="bank-box">
+              <span class="bk-l">Banco</span><span class="bk-v">Bradesco (237)</span>
+              <span class="bk-l">Agência</span><span class="bk-v">3099</span>
+              <span class="bk-l">Conta Corrente</span><span class="bk-v">4186-6</span>
+              <span class="bk-l">PIX / CNPJ</span><span class="bk-v">56.070.635/0001-10</span>
+              <span class="bk-l">Titular</span><span class="bk-v">TSI Soluções Ltda.</span>
+            </div>
+          </div>
+          
+          <div class="alert alert-w" style="margin-top:16px;">
+            <span class="ai">⚠️</span>
+            <span>Ficha cadastral enviada em até <strong>48h</strong> após a reserva. Processos acima de 30 dias terão <strong>acréscimo de 1,5% de juros</strong> sobre o valor residual.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="etapa">
+      <div class="etapa-n">03</div>
+      <div>
+        <div class="etapa-tag">Biometria</div>
+        <div class="etapa-h">Validação Biométrica — Servopa</div>
+        <div class="etapa-body">
+          <div class="pill-grid">
+            <div class="pill">📩 <strong>Passo 1</strong> — Receber e abrir o e-mail oficial da Servopa</div>
+            <div class="pill">🪪 <strong>Passo 2</strong> — Inserir foto nítida do RG ou CNH</div>
+            <div class="pill">🤳 <strong>Passo 3</strong> — Tirar selfie segurando o documento</div>
+            <div class="pill">✅ <strong>Passo 4</strong> — Clicar em Finalizar</div>
+          </div>
+          <div class="alert alert-w" style="margin-top:14px;">
+            <span class="ai">⚠️</span>
+            <span><strong>A análise de crédito só inicia após a conclusão da biometria.</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-sec">
+  <div class="container">
+    <div class="sec-tag">Etapa 02</div>
+    <h2 class="sec-h">Documentação por Perfil</h2>
+    <p class="sec-d">Selecione o perfil do cliente para ver os documentos exigidos.</p>
+    <div class="tab-bar" id="docTabs">
+      <button class="tab-btn active" data-tab="assalariado">👔 Assalariado</button>
+      <button class="tab-btn" data-tab="funcpublico">🏛️ Func. Público</button>
+      <button class="tab-btn" data-tab="empresario">🏢 Empresário</button>
+      <button class="tab-btn" data-tab="pj">🧾 Pessoa Jurídica</button>
+      <button class="tab-btn" data-tab="liberal">🔧 Prof. Liberal</button>
+      <button class="tab-btn" data-tab="aposentado">👴 Aposentado</button>
+    </div>
+    <div id="tab-assalariado" class="tab-panel active">
+      <div class="doc-grid">
+        <div class="doc-item"><span class="di">📋</span>Ficha cadastral preenchida e assinada</div>
+        <div class="doc-item"><span class="di">🪪</span>RG/CPF ou CNH</div>
+        <div class="doc-item"><span class="di">🏠</span>Comprovante de residência (até 60 dias)</div>
+        <div class="doc-item"><span class="di">💼</span>3 últimos holerites</div>
+        <div class="doc-item"><span class="di">📗</span>CTPS Digital</div>
+        <div class="doc-item"><span class="di">📊</span>IR completo com recibo de entrega</div>
+      </div>
+    </div>
+    <div id="tab-funcpublico" class="tab-panel">
+      <div class="doc-grid">
+        <div class="doc-item"><span class="di">📋</span>Ficha cadastral preenchida e assinada</div>
+        <div class="doc-item"><span class="di">🪪</span>RG/CPF ou CNH</div>
+        <div class="doc-item"><span class="di">🏠</span>Comprovante de residência (até 60 dias)</div>
+        <div class="doc-item"><span class="di">💼</span>3 últimos holerites</div>
+        <div class="doc-item"><span class="di">📜</span>Termo de Nomeação / Posse</div>
+        <div class="doc-item"><span class="di">📊</span>IR completo com recibo de entrega</div>
+      </div>
+    </div>
+    <div id="tab-empresario" class="tab-panel">
+      <div class="doc-grid">
+        <div class="doc-item"><span class="di">📋</span>Ficha cadastral preenchida e assinada</div>
+        <div class="doc-item"><span class="di">🪪</span>RG/CPF ou CNH</div>
+        <div class="doc-item"><span class="di">🏠</span>Comprovante de residência (até 60 dias)</div>
+        <div class="doc-item"><span class="di">📊</span>IR completo — IRPF com recibo</div>
+        <div class="doc-item"><span class="di">🧾</span>IRPJ (ECF, Simples ou SIMEI) com recibo</div>
+      </div>
+    </div>
+    <div id="tab-pj" class="tab-panel">
+      <div class="doc-grid">
+        <div class="doc-item"><span class="di">📋</span>Ficha cadastral PJ preenchida</div>
+        <div class="doc-item"><span class="di">📋</span>Ficha cadastral PF do sócio administrador</div>
+        <div class="doc-item"><span class="di">📄</span>Contrato social + última alteração</div>
+        <div class="doc-item"><span class="di">🏛️</span>Certidão Junta Comercial (até 30 dias)</div>
+        <div class="doc-item"><span class="di">📊</span>Balanço + DRE do último exercício</div>
+        <div class="doc-item"><span class="di">🧾</span>IRPJ com recibo de entrega</div>
+        <div class="doc-item"><span class="di">🪪</span>RG/CPF ou CNH do sócio adm.</div>
+        <div class="doc-item"><span class="di">🏠</span>Comprovante de residência sócio adm.</div>
+        <div class="doc-item"><span class="di">📊</span>IR do sócio administrador com recibo</div>
+      </div>
+      <div class="doc-note">⚠️ &nbsp;PJ exige <strong>avalista/fiador</strong>. Se casado: cônjuge assina + RG, CPF/CNH e Certidão de Casamento.</div>
+    </div>
+    <div id="tab-liberal" class="tab-panel">
+      <div class="doc-grid">
+        <div class="doc-item"><span class="di">📋</span>Ficha cadastral preenchida e assinada</div>
+        <div class="doc-item"><span class="di">🪪</span>RG/CPF ou CNH</div>
+        <div class="doc-item"><span class="di">🏠</span>Comprovante de residência (até 60 dias)</div>
+        <div class="doc-item"><span class="di">📊</span>IR completo com recibo de entrega</div>
+      </div>
+    </div>
+    <div id="tab-aposentado" class="tab-panel">
+      <div class="doc-grid">
+        <div class="doc-item"><span class="di">📋</span>Ficha cadastral preenchida e assinada</div>
+        <div class="doc-item"><span class="di">🪪</span>RG/CPF ou CNH</div>
+        <div class="doc-item"><span class="di">🏠</span>Comprovante de residência (até 60 dias)</div>
+        <div class="doc-item"><span class="di">💳</span>3 últimos extratos do benefício</div>
+        <div class="doc-item"><span class="di">📊</span>IR completo com recibo de entrega</div>
+      </div>
+    </div>
+    <div style="margin-top:40px;">
+      <p style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;">Estado Civil — documentos adicionais</p>
+      <div class="civil-grid">
+        <div class="civil-c"><div class="ci">💍</div><div class="ch">Casado</div><p>RG/CPF ou CNH + <strong>Certidão de Casamento</strong> do cônjuge. Para imóvel: assinatura obrigatória.</p></div>
+        <div class="civil-c"><div class="ci">🧍</div><div class="ch">Solteiro</div><p><strong>Certidão de Nascimento</strong>.</p></div>
+        <div class="civil-c"><div class="ci">📝</div><div class="ch">Divorciado</div><p><strong>Certidão de Casamento com Averbação de Divórcio</strong>.</p></div>
+      </div>
+    </div>
+    <div style="margin-top:28px;">
+      <p style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;">Documentação do Bem</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="col-card"><div class="ch">🚗 Automóvel</div><ul><li>DUT ou Pedido de Compra + valor negociado</li></ul></div>
+        <div class="col-card"><div class="ch">🏠 Imóvel</div><ul><li>Matrícula do imóvel atualizada + valor negociado</li></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="price-sec">
+  <div class="container">
+    <div class="sec-tag">Etapa 04</div>
+    <h2 class="sec-h">Análise e Avaliação do Bem</h2>
+    <div class="alert alert-i" style="margin-bottom:24px;background:rgba(0,194,224,.08);border-color:rgba(0,194,224,.25);color:var(--body);">
+      <span class="ai">✔️</span>
+      <div style="font-size:13.5px;color:var(--body);line-height:1.55;">
+        <strong style="color:var(--navy);">CPF sem restrições</strong> cadastrais ou financeiras.<br>
+        <strong style="color:var(--navy);">Renda comprovada de, no mínimo, 3× o valor da parcela mensal, ou avalista que cumpra esse requisito.</strong>
+      </div>
+    </div>
+    <div class="price-cards">
+      <div class="pc"><div class="pci">🚗</div><div class="pcn">Automóvel</div><div class="pcv">R$&nbsp;299</div><div class="pcx">Valor único</div></div>
+      <div class="pc feat"><div class="pci">🏢</div><div class="pcn">Imóvel — Curitiba e RM</div><div class="pcv">R$&nbsp;2.390</div><div class="pcx">Até 2.000 m²</div></div>
+      <div class="pc"><div class="pci">🏡</div><div class="pcn">Imóvel — Demais regiões</div><div class="pcv">R$&nbsp;2.890</div><div class="pcx">Demais regiões do país</div></div>
+    </div>
+    <p style="font-size:12px;color:rgba(255,255,255,.55);margin-top:8px;">*Laudo da avaliação disponível de 5 a 10 dias úteis após a vistoria.</p>
+    <div class="price-rules">
+      <div class="pr"><div class="prl">Regra Geral</div><div class="prt">Valor do bem deve ser <strong>maior que o saldo devedor</strong>.</div></div>
+      <div class="pr"><div class="prl">Regra para Reforma</div><div class="prt">Valor do bem deve ser <strong>2× o saldo devedor</strong> para liberar 100% do crédito.</div></div>
+    </div>
+    <div class="price-warn">⚠️ &nbsp;Valores de avaliação <strong>não são reembolsáveis</strong>, mesmo em caso de reprovação.</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="container">
+    <div class="sec-tag">Etapas 05 e 06</div>
+    <h2 class="sec-h">Aprovação, Contrato e Transferência</h2>
+
+    <div class="etapa">
+      <div class="etapa-n">05</div>
+      <div>
+        <div class="etapa-tag">Aprovação/Contrato</div>
+        <div class="etapa-h">Aprovação e Contrato</div>
+        <div class="etapa-body">
+          <div class="two-col">
+            <div class="col-card" style="border:1px solid rgba(0,194,224,.35);">
+              <div class="ch">📄 Trâmite TSI Soluções</div>
+              <ul>
+                <li>Envio do <strong>Contrato de Compra e Venda</strong></li>
+                <li>Assinatura eletrônica das partes</li>
+                <li>Cobrança do <strong>Valor Residual (70% da entrada)</strong></li>
+              </ul>
+            </div>
+            <div class="col-card" style="border:1px solid rgba(0,200,130,.3);background:rgba(0,200,130,.05);">
+              <div class="ch">🏛️ Trâmite Servopa</div>
+              <ul>
+                <li>Envia <strong>link para pagamento da Taxa de Transferência</strong></li>
+              </ul>
+            </div>
+          </div>
+          <div class="alert alert-g" style="margin-top:14px;">
+            <span class="ai">🔒</span>
+            <span>O <strong>Termo de Transferência</strong> só é emitido após: <strong>Assinatura do Contrato TSI + Pagamento da Taxa Servopa + Pagamento dos 70% Residuais.</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="etapa">
+      <div class="etapa-n">06</div>
+      <div>
+        <div class="etapa-tag">Termo de Transferência</div>
+        <div class="etapa-h">Transferência e Seguro</div>
+        <div class="etapa-body">
+          <div class="two-col">
+            <div class="col-card">
+              <div class="ch">📝 Termo de Cessão</div>
+              <ul>
+                <li>Documento final emitido pela <strong>Servopa</strong></li>
+                <li>Oficializa a troca de titularidade</li>
+                <li>Enviado para <strong>assinatura eletrônica</strong></li>
+              </ul>
+              <div class="alert alert-w" style="margin-top:12px;padding:10px 14px;">
+                <span class="ai" style="font-size:13px;">⚠️</span>
+                <span style="font-size:12.5px;">Sem a assinatura do <strong>Seguro Prestamista</strong> a transferência não será concluída.</span>
+              </div>
+            </div>
+            <div>
+              <p style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;">Checklist Final</p>
+              <div class="checks">
+                <div class="chk-row"><div class="chkm">✓</div><div class="chkt">Taxa de Transferência paga<small>Link enviado pela Servopa</small></div></div>
+                <div class="chk-row"><div class="chkm">✓</div><div class="chkt">Residual de Entrada (70%) liquidado<small>Pago à TSI Soluções</small></div></div>
+                <div class="chk-row"><div class="chkm">✓</div><div class="chkt">Seguro Prestamista assinado</div></div>
+                <div class="chk-row"><div class="chkm">✓</div><div class="chkt">Termo de Cessão assinado</div></div>
+              </div>
+              <div class="done-badge">
+                <p>Processo Concluído</p>
+                <p>Transferência efetivada pela administradora</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tl-sec">
+  <div class="container">
+    <div class="sec-tag">Prazos</div>
+    <h2 class="sec-h">Gestão de Prazos</h2>
+    <div class="alert alert-i" style="margin-bottom:28px;">
+      <span class="ai">ℹ️</span>
+      <span>Não trabalhamos com <strong>prazo fechado</strong>. A conclusão depende da interação entre cliente e administradora.</span>
+    </div>
+    <div class="two-col">
+      <div class="col-card">
+        <div class="ch">⏱️ Tempo de Resposta</div>
+        <ul><li>Após biometria ou complementos: retorno em até <strong>24 horas úteis</strong></li></ul>
+      </div>
+      <div class="col-card">
+        <div class="ch">📊 Fatores que influenciam</div>
+        <ul>
+          <li>Agilidade no envio de documentos</li>
+          <li>Pagamento da entrada e taxa</li>
+          <li>Assinaturas dos contratos no prazo</li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert alert-w" style="margin-top:20px;">
+      <span class="ai">⚠️</span>
+      <span>Processos acima de <strong>30 dias</strong> terão acréscimo de <strong>1,5% de juros</strong> sobre o valor residual. Cancelamentos via e-mail: <strong>contempladas@solucoestsi.com.br</strong></span>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="container">
+    <div class="sec-tag" style="text-align:center;">TSI Soluções</div>
+    <h2 class="closing-h">Suporte de Especialistas</h2>
+    <p class="closing-sub">Acompanhamos todas as etapas com suporte contínuo — transparência, segurança e agilidade.</p>
+    <div class="pillars">
+      <div class="pillar"><div class="pillar-i">🔍</div><div class="pillar-n">Transparência</div></div>
+      <div class="pillar"><div class="pillar-i">🛡️</div><div class="pillar-n">Segurança</div></div>
+      <div class="pillar"><div class="pillar-i">⚡</div><div class="pillar-n">Agilidade</div></div>
+    </div>
+    <div class="contacts">
+      <div class="cpill">📞 (41) 2018-2222</div>
+      <div class="cpill">📱 (41) 9593-5196</div>
+      <div class="cpill">✉️ contempladas@solucoestsi.com.br</div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:18px;">CNPJ 56.070.635/0001-10 — cartascontempladasservopa.com.br</p>
+  </div>
+</section>
+
+<script>
+const tabBar = document.getElementById('docTabs');
+tabBar.addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel = document.getElementById('tab-' + btn.dataset.tab);
+  if (panel) panel.classList.add('active');
+});
+</script>
+</body>
+</html>
