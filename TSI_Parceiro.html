@@ -154,7 +154,7 @@ section{padding:96px 48px}
 .tl-sec{background:var(--navy2)}
 .tl-wrap{
   display:flex;align-items:flex-start;gap:0;
-  position:relative;padding:20px 0 100px;overflow-x:auto;overflow-y:visible;
+  position:relative;padding:20px 0 28px;overflow-x:auto;
 }
 .tl-line{
   position:absolute;top:39px;left:calc(8.33% + 20px);right:calc(8.33% + 20px);
@@ -546,13 +546,18 @@ section{padding:96px 48px}
   .closing{padding:72px 16px}
   .etapa-card{grid-template-columns:1fr;gap:16px}
   .etapa-left{flex-direction:row;align-items:center}
-  .etapa-num{font-size:72px}
+  .etapa-num{font-size:64px}
   .two-col,.two-mini,.three-col,.price-cards,.price-rules,.email-grid{grid-template-columns:1fr}
   .hero{padding:90px 16px 60px}
-  .tl-wrap{gap:0}
-  .tl-lbl{font-size:8px}
-  .tab-bar{gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
-  .tab-btn{padding:9px 14px;font-size:11px}
+  /* timeline mobile: dots menores, labels legíveis */
+  .tl-wrap{gap:0;padding-bottom:12px}
+  .tl-step{min-width:52px}
+  .tl-dot{width:32px;height:32px;font-size:11px}
+  .tl-lbl{font-size:8.5px;max-width:56px;word-break:break-word}
+  .tl-line{top:30px}
+  /* tabs scrolláveis horizontalmente */
+  .tab-bar{gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+  .tab-btn{padding:9px 14px;font-size:11px;white-space:nowrap;flex-shrink:0}
   .hero-stats{gap:0}
   .stat-card{padding:16px 22px}
   .bank-box{grid-template-columns:1fr;gap:2px}
@@ -560,6 +565,11 @@ section{padding:96px 48px}
   .bk-v{font-size:13px}
   .btn-pdf span{display:none}
   .btn-pdf{padding:9px 14px}
+  /* modal full-width no mobile */
+  .etapa-modal{padding:28px 20px;border-radius:16px;width:calc(100vw - 32px)}
+  .modal-title{font-size:19px}
+  /* watermark numbers menores e sem overflow */
+  .etapa-num[style*="position:absolute"]{font-size:80px!important;opacity:.4!important}
 }
 
 /* ═══════════════════════════════════
@@ -1260,25 +1270,34 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
+const isTouch = () => window.matchMedia('(hover: none)').matches;
+
 document.querySelectorAll('.tl-step').forEach((step, i) => {
   const dot = step.querySelector('.tl-dot');
-  // hover no dot → abre modal
-  dot.addEventListener('mouseenter', () => openModal(step, i + 1));
-  dot.addEventListener('mouseleave', e => {
-    // só fecha se o mouse não foi para o modal
-    if (!overlay.contains(e.relatedTarget)) closeModal();
-  });
-  // clique no dot → rola para a seção
-  dot.addEventListener('click', e => {
-    e.stopPropagation();
-    closeModal();
-    const target = document.getElementById(step.dataset.target);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+
+  if (!isTouch()) {
+    // Desktop: hover abre modal, clique desce para seção
+    dot.addEventListener('mouseenter', () => openModal(step, i + 1));
+    dot.addEventListener('mouseleave', e => {
+      if (!overlay.contains(e.relatedTarget)) closeModal();
+    });
+    dot.addEventListener('click', e => {
+      e.stopPropagation();
+      closeModal();
+      const target = document.getElementById(step.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  } else {
+    // Mobile/touch: toque abre modal (botão dentro rola para a seção)
+    dot.addEventListener('click', e => {
+      e.stopPropagation();
+      openModal(step, i + 1);
+    });
+  }
 });
 
 modalClose.addEventListener('click', closeModal);
-overlay.addEventListener('mouseleave', closeModal);
+overlay.addEventListener('mouseleave', e => { if (!isTouch()) closeModal(); });
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 modalCta.addEventListener('click', () => {
